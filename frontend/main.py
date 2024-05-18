@@ -1,9 +1,9 @@
 from dotenv import load_dotenv
-import dotenv
+import os
 import streamlit as st
 import logging
 from components.sidebar import sidebar
-
+import time
 from core.parsing import load_audio_file
 
 import requests
@@ -64,11 +64,25 @@ for ind, file in enumerate(uploaded_files):
     )
     processed_files.append(processed_file)
 else:
-    requests.post(os.getenv('BACKEND_HOST'))
+    time.sleep(0.5)
+    progress_bar.empty()
 
 if not processed_files:
     st.stop()
 
+results = []
+
+for processed_file in processed_files:
+    api = os.getenv("API_HOST")
+    payload = {"path": processed_file.file_path}
+    response = requests.post(
+        url=f"http://{api}:5000/api/audio_file",
+        files={'file': processed_file.bytes},
+        data=payload,
+    )
+    print(response.content)
+    # TODO Обработка ошибки сервера
+    results.append(response)
 
 
 #    # Output Columns

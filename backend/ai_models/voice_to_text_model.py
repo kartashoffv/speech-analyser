@@ -27,10 +27,6 @@ pipe = pipeline(
 pipe.tokenizer.pad_token_id = model.config.eos_token_id
 
 
-def run_voice_to_text(path):
+def run_voice_to_text(path) -> list[dict]:
     result = pipe(path, generate_kwargs={"language": "russian"})
     return result["chunks"]
-
-
-# Пример работы
-# print(run_voice_to_text('/Users/kartashoffv/Documents/hack_RZD/speech-analyser/sample_data/test_audio.mp3'))

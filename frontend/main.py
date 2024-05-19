@@ -8,6 +8,8 @@ from core.parsing import load_audio_file
 
 import requests
 
+load_dotenv()
+
 supported_formats = ["mp3", "wav"]
 pretty_supported_formats = ", ".join(supported_formats)
 
@@ -17,11 +19,6 @@ st.set_page_config(page_title="Анализатор РЖД", page_icon="📖", l
 st.header("Анализатор служебных переговоров")
 
 sidebar()
-
-
-file_count = 0
-load_dotenv()
-
 
 uploaded_files = st.file_uploader(
     f"Загрузите файлы в следующих форматах: {supported_formats}",
@@ -86,7 +83,6 @@ for ind, processed_file in enumerate(processed_files):
         url=f"http://{API_HOST}:5000/api/audio_file",
         files={"file": processed_file.bytes},
     )
-    print(response.content)
     if not response.status_code == 200:
         st.error(
             f"Возникла серверная ошибка при обработке файла {processed_file.initial_name}.\n\
@@ -105,6 +101,7 @@ for ind, processed_file in enumerate(processed_files):
             "class": response["class"],
         }
     )
+    processed_file.dispose()
 
 progress_bar.empty()
 
@@ -119,18 +116,13 @@ with file_name_col:
     st.header("Имя файла")
     for result in results:
         st.markdown(result["file_name"])
-    # st.markdown([result["file_name"] for result in results])
 
 with script_col:
     st.header("Транскрипция диалога")
     for result in results:
         st.markdown(result["script"])
-        
-    # [st.markdown(result["script"]) for result in results]
-    # st.markdown([result["script"] for result in results])
 
 with class_col:
     st.header("Результат")
     for result in results:
         st.markdown(result["class"])
-    # st.markdown([result["class"] for result in results])

@@ -33,4 +33,4 @@ def run_voice_to_text(path):
 
 
 # Пример работы
-# print(run_voice_to_text('/sample_data/29к_874 КВ - 02.05.2024 01_08_44.mp3'))
+# print(run_voice_to_text('/Users/kartashoffv/Documents/hack_RZD/speech-analyser/sample_data/test_audio.mp3'))

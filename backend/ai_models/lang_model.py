@@ -32,12 +32,13 @@ INPUT: {input}
 chain = prompt | llm 
 
 def txt_classifier(script):
-    ans = chain.invoke({"input": script})
-    if not "ДОПУЩЕНА ОШИБКА" in ans or not "ВСЕ ВЕРНО" in ans:
-        return "ДИАЛОГ НЕ ОБРАБОТАН"
-    else:
+    ans = chain.invoke({"input": script}).upper()
+    if "ДОПУЩЕНА ОШИБКА" in ans or "ВСЕ ВЕРНО" in ans:
         return ans
+    else:
+        return "ДИАЛОГ НЕ ОБРАБОТАН"
 
 # Пример работы    
-#chunks = [{'timestamp': (0.0, 15.0), 'text': ''}, {'timestamp': (20.0, 52.24), 'text': ''}]
+# chunks = [{'timestamp': (0.0, 15.0), 'text': ''}, {'timestamp': (20.0, 52.24), 'text': ''}]
+# chunks = [{'timestamp': (0.0, 15.0), 'text': ''}, {'timestamp': (20.0, 52.24), 'text': ''}]
 #print(txt_classifier(chunks))

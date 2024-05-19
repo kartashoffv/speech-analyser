@@ -10,6 +10,7 @@ class AudioFile(abc.ABC):
     files_temp_dir = os.getcwd() + "/temp/"
 
     def __init__(self, file: BytesIO) -> None:
+        self.initial_name = file.name
         self.bytes = file
         file_buffer = file.getbuffer()
         file_name = md5(file_buffer).hexdigest()

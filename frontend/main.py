@@ -1,12 +1,13 @@
-from dotenv import load_dotenv
-import os
-import streamlit as st
 import logging
-from components.sidebar import sidebar
+import os
 import time
-from core.parsing import load_audio_file
 
 import requests
+import streamlit as st
+from dotenv import load_dotenv
+
+from components.sidebar import sidebar
+from core.parsing import load_audio_file
 
 load_dotenv()
 

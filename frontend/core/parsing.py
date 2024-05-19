@@ -1,9 +1,10 @@
-from io import BytesIO
-import eyed3
-from hashlib import md5
-import os
 import abc
+import os
 import sndhdr
+from hashlib import md5
+from io import BytesIO
+
+import eyed3
 
 
 class AudioFile(abc.ABC):

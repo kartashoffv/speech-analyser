@@ -1,8 +1,10 @@
-from flask import Flask, request, abort
+import os
+
+from dotenv import load_dotenv
+from flask import Flask, abort, request
+
 from ai_models.lang_model import txt_classifier
 from ai_models.voice_to_text_model import run_voice_to_text
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 

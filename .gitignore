@@ -1,5 +1,7 @@
-temp/*
-
+frontend/temp/*
+*.ipynb
+.DS*
+venv_test/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

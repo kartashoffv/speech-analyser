@@ -117,12 +117,20 @@ file_name_col, script_col, class_col = st.columns([2, 3, 1])
 
 with file_name_col:
     st.header("Имя файла")
-    st.markdown([result["file_name"] for result in results])
+    for result in results:
+        st.markdown(result["file_name"])
+    # st.markdown([result["file_name"] for result in results])
 
 with script_col:
     st.header("Транскрипция диалога")
-    st.markdown([result["script"] for result in results])
+    for result in results:
+        st.markdown(result["script"])
+        
+    # [st.markdown(result["script"]) for result in results]
+    # st.markdown([result["script"] for result in results])
 
 with class_col:
     st.header("Результат")
-    st.markdown([result["class"] for result in results])
+    for result in results:
+        st.markdown(result["class"])
+    # st.markdown([result["class"] for result in results])

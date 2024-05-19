@@ -33,8 +33,10 @@ chain = prompt | llm
 
 def txt_classifier(script):
     ans = chain.invoke({"input": script}).upper()
-    if "ДОПУЩЕНА ОШИБКА" in ans or "ВСЕ ВЕРНО" in ans:
-        return ans
+    if "ДОПУЩЕНА ОШИБКА" in ans:
+        return "Обнаружена ошибка в документе"
+    if "ВСЕ ВЕРНО" in ans:
+        return "Ошибок в документе не обнаружено"
     else:
         return "ДИАЛОГ НЕ ОБРАБОТАН"
 

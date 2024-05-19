@@ -29,7 +29,7 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True,
 )
 
-submit = st.button('Отправить файлы на анализ')
+submit = st.button("Отправить файлы на анализ")
 
 if not uploaded_files:
     st.stop()
@@ -37,9 +37,7 @@ if not uploaded_files:
 processed_files = []
 
 progress_text = "Загрузка файлов. Загружено {} из {}"
-progress_bar = st.progress(
-    0, text=progress_text.format(0, len(uploaded_files))
-)
+progress_bar = st.progress(0, text=progress_text.format(0, len(uploaded_files)))
 
 for ind, file in enumerate(uploaded_files):
     file_no = ind + 1
@@ -79,27 +77,34 @@ if not submit:
     st.stop()
 
 progress_text = "Анализ файлов. Проанализировано {} из {}"
-progress_bar = st.progress(
-    0, text=progress_text.format(0, len(processed_files))
-)
+progress_bar = st.progress(0, text=progress_text.format(0, len(processed_files)))
 
 for ind, processed_file in enumerate(processed_files):
     file_no = ind + 1
     API_HOST = os.getenv("API_HOST")
     response = requests.post(
         url=f"http://{API_HOST}:5000/api/audio_file",
-        files={'file': processed_file.bytes},
+        files={"file": processed_file.bytes},
     )
     print(response.content)
     if not response.status_code == 200:
-        st.error(f"Возникла серверная ошибка при обработке файла {processed_file.initial_name}.\n\
-                 Обратитесь в службу поддержки.")
+        st.error(
+            f"Возникла серверная ошибка при обработке файла {processed_file.initial_name}.\n\
+                 Обратитесь в службу поддержки."
+        )
         continue
     progress_bar.progress(
         file_no / len(processed_files),
         text=progress_text.format(file_no, len(processed_files)),
     )
-    results.append({processed_file: response})
+    response = response.json()
+    results.append(
+        {
+            "file_name": processed_file.initial_name,
+            "script": response["script"],
+            "class": response["class"],
+        }
+    )
 
 progress_bar.empty()
 
@@ -107,24 +112,17 @@ progress_bar.empty()
 if not results:
     st.stop()
 
-#    # Output Columns
-#    answer_col, sources_col = st.columns(2)
-#
-#    llm = get_llm(model=model, openai_api_key=openai_api_key, temperature=0)
-#    result = query_folder(
-#        folder_index=folder_index,
-#        query=query,
-#        return_all=return_all_chunks,
-#        llm=llm,
-#    )
-#
-#    with answer_col:
-#        st.markdown("#### Answer")
-#        st.markdown(result.answer)
-#
-#    with sources_col:
-#        st.markdown("#### Sources")
-#        for source in result.sources:
-#            st.markdown(source.page_content)
-#            st.markdown(source.metadata["source"])
-#            st.markdown("---")
+# Output Columns
+file_name_col, script_col, class_col = st.columns([2, 3, 1])
+
+with file_name_col:
+    st.header("Имя файла")
+    st.markdown([result["file_name"] for result in results])
+
+with script_col:
+    st.header("Транскрипция диалога")
+    st.markdown([result["script"] for result in results])
+
+with class_col:
+    st.header("Результат")
+    st.markdown([result["class"] for result in results])

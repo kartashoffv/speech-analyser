@@ -33,4 +33,4 @@ def process_file():
 
     result = txt_classifier(message)
 
-    return {"script": message, "result": result}
+    return {"script": message, "class": result}

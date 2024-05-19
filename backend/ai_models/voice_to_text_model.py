@@ -29,7 +29,8 @@ pipe.tokenizer.pad_token_id = model.config.eos_token_id
 
 def run_voice_to_text(path):
     result = pipe(path, generate_kwargs={"language": "russian"})
-    return result['chunks']
+    return result["chunks"]
+
 
 # Пример работы
 # print(run_voice_to_text('/sample_data/29к_874 КВ - 02.05.2024 01_08_44.mp3'))

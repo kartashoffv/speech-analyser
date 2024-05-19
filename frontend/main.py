@@ -29,13 +29,15 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True,
 )
 
+submit = st.button('Отправить файлы на анализ')
+
 if not uploaded_files:
     st.stop()
 
 processed_files = []
 
 progress_text = "Загрузка файлов. Загружено {} из {}"
-file_count = progress_bar = st.progress(
+progress_bar = st.progress(
     0, text=progress_text.format(0, len(uploaded_files))
 )
 
@@ -70,20 +72,40 @@ else:
 if not processed_files:
     st.stop()
 
+
 results = []
 
-for processed_file in processed_files:
-    api = os.getenv("API_HOST")
-    payload = {"path": processed_file.file_path}
+if not submit:
+    st.stop()
+
+progress_text = "Анализ файлов. Проанализировано {} из {}"
+progress_bar = st.progress(
+    0, text=progress_text.format(0, len(processed_files))
+)
+
+for ind, processed_file in enumerate(processed_files):
+    file_no = ind + 1
+    API_HOST = os.getenv("API_HOST")
     response = requests.post(
-        url=f"http://{api}:5000/api/audio_file",
+        url=f"http://{API_HOST}:5000/api/audio_file",
         files={'file': processed_file.bytes},
-        data=payload,
     )
     print(response.content)
-    # TODO Обработка ошибки сервера
-    results.append(response)
+    if not response.status_code == 200:
+        st.error(f"Возникла серверная ошибка при обработке файла {processed_file.initial_name}.\n\
+                 Обратитесь в службу поддержки.")
+        continue
+    progress_bar.progress(
+        file_no / len(processed_files),
+        text=progress_text.format(file_no, len(processed_files)),
+    )
+    results.append({processed_file: response})
 
+progress_bar.empty()
+
+
+if not results:
+    st.stop()
 
 #    # Output Columns
 #    answer_col, sources_col = st.columns(2)

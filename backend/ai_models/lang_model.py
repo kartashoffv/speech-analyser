@@ -31,10 +31,8 @@ INPUT: {input}
 
 chain = prompt | llm 
 
-def txt_classifier(voice2text_config):
-    msgs = [msg['text'] for msg in voice2text_config]
-    msg = " ".join(msgs)
-    ans = chain.invoke({"input": msg})
+def txt_classifier(script):
+    ans = chain.invoke({"input": script})
     if not "ДОПУЩЕНА ОШИБКА" in ans or not "ВСЕ ВЕРНО" in ans:
         return "ДИАЛОГ НЕ ОБРАБОТАН"
     else:
